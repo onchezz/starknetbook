@@ -73,6 +73,21 @@ two things: order and execute transactions.
   Both use the [Cairo VM](https://github.com/lambdaclass/cairo-vm) for
   their framework.
 
+## Madara
+Madara is a standard, customizable, and blazing fast Starknet sequencer. It is built on the robust Substrate framework and uses the Cairo VM to execute Cairo programs and Starknet smart contracts. Madara is designed to make it easy to launch your own Starknet appchain or L3, and to give you complete control over your custom appchain, tailored to your specific requirements.
+### [madara explorer](https://madaraexplorer.com/)
+Madara offers a number of benefits, including:
+
+    High performance and scalability: Madara is built on Substrate and Rust, which makes it extremely fast and scalable. It can handle thousands of transactions per second and can scale to meet the needs of even the most demanding applications.
+    Customizability: Madara is highly customizable, allowing you to create an appchain that meets your specific needs. You can choose the features you want to include, the level of security you require, and the performance you need.
+    Security: Madara inherits the security of Starknet, which is one of the most secure Layer 2 scaling solutions available. All transactions on Madara are verified by Stark proofs, which are mathematically proven to be correct.
+
+Madara is still under development, but it is already being used by a number of projects to build innovative applications on Starknet. Some of the projects using Madara include:
+
+    Starkgate: A decentralized exchange that allows users to trade assets between Ethereum and Starknet without having to pay gas fees.
+    Immutable: A gaming platform that offers instant transactions and zero gas fees.
+    Aztec Network: A privacy-preserving Layer 2 solution that allows users to make private transactions on Ethereum.
+
 We also have the Kraken Sequencer as another option.
 
 - **Ordering**: It employs Narwhall & Bullshark for mempool
