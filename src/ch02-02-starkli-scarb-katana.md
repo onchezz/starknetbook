@@ -12,52 +12,23 @@ don’t, refer to Basic Installation in this chapter.
     katana --version # To declare and deploy on local development
 ```
 
-## [OPTIONAL] Checking Supported Compiler Versions
-
-If issues arise during the declare or deploy process, ensure that the Starkli compiler version aligns with the Scarb compiler version.
-
-To check the compiler versions Starkli supports, run:
-
-```bash
-starkli declare --help
-
-```
-
-You’ll see a list of possible compiler versions under the
-`--compiler-version` flag.
-
-```bash
-    ...
-    --compiler-version <COMPILER_VERSION>
-              Statically-linked Sierra compiler version [possible values: [COMPILER VERSIONS]]]
-    ...
-```
-
-Be aware: Scarb's compiler version may not match Starkli’s. To verify Scarb's version:
-
-```bash
-    scarb --version
-```
-
-The output displays the versions for scarb, cairo, and sierra:
-
-```bash
-    scarb <SCARB VERSION>
-    cairo: <COMPILER VERSION>
-    sierra: <SIERRA VERSION>
-```
-
-If the versions don't match, consider installing a version of Scarb compatible with Starkli. Browse [Scarb's GitHub](https://github.com/software-mansion/scarb/releases) repo for earlier releases.
-
-To install a specific version, such as `2.3.0`, run:
-
-```bash
-    curl --proto '=https' --tlsv1.2 -sSf https://docs.swmansion.com/scarb/install.sh | sh -s -- -v 2.3.0
-```
-
 ## Crafting a Starknet Smart Contract
 
-Begin by initiating a Scarb project:
+**Important:** Before we proceed with this example, please ensure that the versions of both `katana` and `starkli` match the specified versions provided below.
+
+```console
+    katana --version  # 0.4.4
+    starkli --version  # 0.1.20 (e4d2307)
+```
+
+If this is not your case, you have to install them like this:
+
+```sh
+    dojoup -v 0.4.4
+    starkliup -v 0.1.20
+```
+
+Now begin by initiating a Scarb project:
 
 ```bash
 scarb new my_contract
@@ -125,7 +96,6 @@ mod hello {
         }
     #[external(v0)]
         fn set_name(ref self: ContractState, name: felt252) {
-            let previous = self.name.read();
             self.name.write(name);
         }
 }

@@ -17,7 +17,7 @@ the Account Descriptor is a JSON file detailing the wallet’s address and
 public key.
 
 In order for an account to be used as a signer it must be deployed to the appropriate network,
-Starknet Goerli or mainnet, and funded. For this example we are going to use Goerli Testnet. To deploy your wallet, visit [Smart Wallet Setup](https://book.starknet.io/ch01-00-getting-started.html#smart-wallet-setup).
+Starknet Goerli, Sepolia or mainnet, and funded. For this example we are going to use Goerli Testnet. To deploy your wallet, visit [Smart Wallet Setup](https://book.starknet.io/ch01-00-getting-started.html#smart-wallet-setup).
 Now you’re ready to interact with Starknet smart contracts.
 
 ### Creating a Signer
@@ -53,6 +53,8 @@ likely have several wallets. In this tutorial, we will use the name
 In the private key prompt, paste the private key of your smart wallet.
 In the password prompt, enter a password of your choice. You will need
 this password to sign transactions using Starkli.
+
+### How to get the private key?
 
 Export the private key from your Braavos or Argent wallet. For Argent X,
 you can find it in the "Settings" section → Select your Account →
@@ -179,22 +181,19 @@ Before to continue, we have to choose a rpc provider
 
 There are three main options for RPC providers, sorted by ease of use:
 
-1.  **Starknet Sequencer’s Gateway**: The quickest option and it’s the
-    default for Starkli for now. The sequencer gateway is deprecated and
-    will be disabled by StarkWare soon. You’re strongly recommended to
-    use a third-party JSON-RPC API provider like Infura, Alchemy, or
-    Chainstack.
-
-2.  **Infura or Alchemy**: A step up in complexity. You’ll need to set
+1.  **Infura or Alchemy**: A step up in complexity. You’ll need to set
     up an API key and choose an endpoint. For Infura, it would look like
-    `https://starknet-goerli.infura.io/v3/<API_KEY>`. Learn more in the
+    `https://starknet-sepolia.infura.io/v3/<API_KEY>`. Learn more in the
     [Infura
     documentation](https://docs.infura.io/networks/starknet/how-to/choose-a-network).
 
-3.  **Your Own Node**: For those who want full control. It’s the most
+2.  **Your Own Node**: For those who want full control. It’s the most
     complex but offers the most freedom. Check out [Chapter 4 of the
     Starknet Book](https://book.starknet.io/chapter_4/node.html) or
     [Kasar](https://www.kasar.io/) for setup guides.
+
+3.  **Free RPC vendor**: These 3 networks are eligible for free RPC vendors: mainet, goerli, sepolia.
+    You can choose [Blast](https://blastapi.io/public-api/starknet) or [Nethermind](https://data.voyager.online/)
 
 ### Creating an Account Descriptor
 
@@ -206,8 +205,34 @@ input and generates the account descriptor file. The account descriptor
 file is a JSON file that contains the details of your smart wallet. We also have to pass the rpc provider here.
 
 ```bash
-    starkli account fetch <SMART_WALLET_ADDRESS> --output ~/.starkli-wallets/deployer/my_account_1.json --rpc https://starknet-goerli.g.alchemy.com/v2/<API_KEY>
+    starkli account fetch <SMART_WALLET_ADDRESS> --output ~/.starkli-wallets/deployer/my_account_1.json --rpc https://starknet-testnet.public.blastapi.io/rpc/v0_6
 ```
+
+Note: Here we used the Public RPC Endpoint v0.6 Starknet (Goerli) Testnet from **Blast**. If you don't specify the rpc provider, Starkli will use Goerli, which will be deprecated in the upcoming months. Thus you can check the rpc url for Sepolia network on [Blast](https://blastapi.io/public-api/starknet).
+
+> ⚠️ **Contract not found?**
+>
+> In case you face an error like this:
+>
+> ```bash
+>     Error: ContractNotFound
+> ```
+>
+> #### 🟩 Solution:
+>
+> It means you probably just created a new wallet and it has **not been deployed yet**. To accomplish this you have to fund your wallet with tokens and **transfer tokens** to a **different** wallet address. For goerli tokens you can check this [faucet](https://faucet.goerli.starknet.io/). For Sepolia tokens detailed intructons can be found in the [Get Sepolia Tokens](./ch02-05-01-start-with-sepolia.md) section.
+>
+> **Still doesn't work?**
+>
+> Check if your wallet's testnet network isn't yet set with Goerli or Sepolia, try again with your blast rpc url.
+>
+> ```bash
+> starknet account fetch ... --rpc https://starknet-testnet.public.blastapi.io/rpc/
+> ```
+>
+> ⚠️ And if you use Goerli, make sure you use it in subsequent commands as well.
+
+After this process, search your wallet address on the Starknet explorer. To see the details, go back to [Smart Wallet Setup](https://book.starknet.io/ch01-00-getting-started.html#smart-wallet-setup).
 
 After running the command, you’ll see a message like the one below.
 We’re using a Braavos wallet as an example, but the steps are the same
@@ -218,14 +243,6 @@ for an Argent wallet.
     Description: Braavos official proxy account
     Downloaded new account config file: ~/.starkli-wallets/deployer/my_account_1.json
 ```
-
-In case you face an error like this:
-
-```bash
-    Error: code=ContractNotFound, message="Contract with address {SMART_WALLET_ADDRESS} is not deployed."
-```
-
-It means you probably just created a new wallet and it has not been deployed yet. To accomplish this you have to fund your wallet with tokens and transfer tokens to a different wallet address. After this process, search your wallet address on the Starknet explorer. To see the details, go back to [Smart Wallet Setup](https://book.starknet.io/ch01-00-getting-started.html#smart-wallet-setup).
 
 After the acount descriptor file is generated, you can see its details, run:
 
@@ -271,6 +288,7 @@ another for the Account Descriptor file.
 ```bash
     export STARKNET_ACCOUNT=~/.starkli-wallets/deployer/my_account_1.json
     export STARKNET_KEYSTORE=~/.starkli-wallets/deployer/my_keystore_1.json
+    export STARKNET_RPC=https://starknet-testnet.public.blastapi.io/rpc/v0_6
 ```
 
 Setting these variables makes running Starkli commands easier and more
@@ -296,15 +314,8 @@ section.
 ```
 
 This creates a compiled contract in `target/dev/` as
-"contracts_Ownable.sierra.json" (in Chapter 2 of the book we will learn
+`ownable_starknet_ownable.compiled_contract_class.json` (in Chapter 2 of the book we will learn
 more details about Scarb).
-
-With the smart contract compiled, we’re ready to declare it using
-Starkli. Then we can set the STARKNET_RPC environment variable to make command invocations easier:
-
-```bash
-    export STARKNET_RPC="https://starknet-goerli.g.alchemy.com/v2/<API_KEY>"
-```
 
 ### Declaring Your Contract
 
@@ -312,7 +323,7 @@ Run this command to declare your contract using the default Starknet
 Sequencer’s Gateway:
 
 ```bash
-    starkli declare target/dev/contracts_Ownable.contract_class.json
+    starkli declare ./target/dev/ownable_starknet_ownable.contract_class.json
 ```
 
 According to the `STARKNET_RPC` url, starkli can recognize the target
@@ -415,11 +426,10 @@ requires no arguments.
 ```bash
     starkli call \
         <CONTRACT_ADDRESS> \
-        get_owner
+        owner
 ```
 
-Replace `<CONTRACT_ADDRESS>` with the address of your contract. The
-command will return the owner’s address, which was initially set during
+Replace `<CONTRACT_ADDRESS>` with the address of your recently deployed contract. The command will return the owner’s address, which was initially set during
 the contract’s deployment:
 
 ```bash
@@ -472,7 +482,7 @@ the `get_owner` function again:
 ```bash
     starkli call \
         <CONTRACT_ADDRESS> \
-        get_owner
+        owner
 ```
 
 If the function returns the new owner’s address, the transfer was
